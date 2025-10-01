@@ -1,0 +1,203 @@
+/* PAGE LAYOUT STYLES */
+body {
+  background: linear-gradient(135deg, #f3f5ff, #e8ebf9);
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* ILLUSTRATION AREA */
+
+.left-panel {
+  flex: 1;
+  background: #f4f4f4 url('https://www.svgrepo.com/show/354380/analytics.svg') center/contain no-repeat;
+}
+
+.side-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* FORM AREA */
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 50px;
+  text-align: center;
+  background-color: white;
+  gap: 10px;
+}
+
+.company-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.company-name {
+  font-size: 18px;
+  color: #4b2aad;
+  font-weight: bold;
+}
+
+/* TYPOGRAPHY */
+
+h2 {
+  font-size: 32px;
+  color: #4b2aad;
+  margin-bottom: 20px;
+}
+
+/* MODE TOGGLE */
+
+.mode-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.mode-toggle button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.mode-toggle .active {
+  background-color: #4b2aad;
+  color: white;
+}
+
+.mode-toggle-switch {
+  display: flex;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 240px;
+  margin: 0 auto 25px auto;
+  background: #f0f0f0;
+  cursor: pointer;
+  position: relative;
+}
+
+.toggle-option {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  transition:  0.3s ease, color 0.3s ease;
+  font-weight: 500;
+  color: #4b2aad;
+}
+
+.toggle-option.active {
+  background-color: #4b2aad;
+  color: white;
+}
+
+
+/* FORM INPUTS */
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  padding-left: 40px;
+}
+
+.input-wrapper .input-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #aaa;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  margin-bottom: 18px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* BUTTONS */
+
+.submit-btn {
+  width: 100%;
+  background-color: #4b2aad;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+/* LINKS */
+
+.register-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register-text a {
+  color: #4b2aad;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* MEDIA */
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .left-panel {
+    height: 100px;
+    margin-top: 50px;
+    background-size: contain;
+
+  }
+
+  .right-panel {
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .mode-toggle-switch {
+    width: 250px;
+  }
+
+  input {
+    font-size: 14px;
+
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    padding: 6px;
+    margin: 0 auto 1px auto;
+  }
+}
+
+
+

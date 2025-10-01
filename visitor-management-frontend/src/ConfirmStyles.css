@@ -1,0 +1,47 @@
+/* Override react-confirm-alert with your color scheme */
+
+
+.react-confirm-alert {
+    background: white !important;
+    color: #003366 !important; /* dark blue text */
+    border-radius: 16px !important;
+    padding: 20px !important;
+    max-width: 600px !important;
+    box-shadow: 0 8px 24px rgba(0, 51, 102, 0.3) !important;
+    font-family: 'Segoe UI', sans-serif !important;
+}
+
+.react-confirm-alert h1,
+.react-confirm-alert .react-confirm-alert-body {
+    color: #003366 !important;
+}
+
+.react-confirm-alert-button-group button {
+    border-radius: 5px !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 15px !important;
+    font-family: 'Segoe UI', sans-serif !important;
+    transition: background-color 0.3s ease;
+}
+
+.react-confirm-alert-button-group button:first-child {
+    background-color: #007bff !important; /* dark blue */
+    color: white !important;
+    margin-right: 12px !important;
+}
+
+.react-confirm-alert-button-group button:first-child:hover {
+    background-color: #002a55 !important; /* darker blue */
+}
+
+.react-confirm-alert-button-group button:last-child {
+    background-color: #ddd !important; /* light gray */
+    color: #003366 !important; /* dark blue text */
+}
+
+.react-confirm-alert-button-group button:last-child:hover {
+    background-color: #bbb !important; /* medium gray */
+}

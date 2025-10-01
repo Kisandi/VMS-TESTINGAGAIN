@@ -1,0 +1,342 @@
+.register-page {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 2px 1px;
+  background: linear-gradient(135deg, #f5f7fa, #e0eafc);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  margin: auto 1px;
+}
+
+.register-header {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #003366;
+  margin-bottom: 1px;
+}
+
+.back-arrow {
+  font-size: 20px;
+  cursor: pointer;
+  color: #4b2aad;
+  text-decoration: none;
+  padding-left: 15px;
+}
+
+.company-name {
+  margin-top: -10px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #4b2aad;
+}
+
+.form-title {
+  font-size: 28px;
+  color: #4b2aad;
+  margin: 5px 0;
+  text-align: center;
+}
+
+.register-form {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  width: 100%;
+  margin: 5px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0px;
+  margin-top: 2px;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.form-row.single {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.register-form label {
+  margin-top: 0px;
+  font-weight: 500;
+  color: #4b2aad;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+
+.register-form input,
+.register-form select {
+  margin-top: 0px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: 0.3s ease;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  outline: none;
+  border-color: #4b2aad;
+  box-shadow: 0 0 5px rgba(75, 42, 173, 0.2);
+}
+
+.file-upload {
+  flex-direction: column;
+  width: 100%;
+  margin-top: 0px;
+}
+
+.file-upload input[type="file"] {
+  width: 100%;
+  padding: 6px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #fdfdfd;
+  transition: 0.3s ease;
+  margin-top: -10px;
+}
+
+.file-upload input[type="file"]:hover {
+  border-color: #4b2aad;
+}
+
+.file-note {
+  font-size: 12px;
+  color: #888;
+  margin-top: -25px;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.submit-wrapper {
+  margin-top: -30px; /* Or 0 if you want no gap */
+}
+
+
+.submit-btn {
+  margin-top: 0px;
+  padding: 1px;
+  background-color: #4b2aad;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  width: 200px;
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #372089;
+}
+
+.success-card {
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  max-width: 400px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease;
+}
+
+.success-icon {
+  font-size: 48px;
+  color: #7a5ffb;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.success-card h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #222;
+}
+
+.success-card p {
+  color: #999;
+  margin-bottom: 30px;
+}
+
+.continue-btn {
+  display: inline-block;
+  background-color: #4b2aad;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: background 0.3s ease;
+}
+
+.continue-btn:hover {
+  background-color: #372089;
+}
+
+/* Register.css */
+
+/* Tooltip container */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Icon style */
+.error-icon {
+  color: red;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Tooltip text */
+.tooltip-text {
+  visibility: hidden;
+  background-color: #f44336;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 8px;
+  position: absolute;
+  z-index: 1;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Show the tooltip text on hover */
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .register-form {
+    padding: 20px;
+    max-width: 90%;
+    margin: 10px;
+  }
+
+  .company-name {
+    text-align: center;
+  }
+
+  .form-title{
+    margin-top: 50px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-column {
+    width: 100%;
+  }
+
+  .form-title {
+    font-size: 22px;
+  }
+
+  .company-name {
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+
+  .file-upload input[type="file"] {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .tooltip-text {
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+  }
+
+  .success-card {
+    margin: 20px;
+    padding: 20px;
+    max-width: 90%;
+  }
+
+  .success-icon {
+    font-size: 36px;
+  }
+
+  .continue-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-title {
+    font-size: 20px;
+  }
+
+  .register-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .company-name {
+    font-size: 14px;
+    align-items: center;
+  }
+
+  .back-arrow {
+    font-size: 16px;
+  }
+}
+
