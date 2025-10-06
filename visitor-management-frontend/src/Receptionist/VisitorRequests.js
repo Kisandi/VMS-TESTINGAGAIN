@@ -72,16 +72,15 @@ export default function VisitorRequests() {
                 if (response.success) {
                     let filtered = response.data || [];
                     // For approved tab, only show those with a token_id
-                    if (subTab === 'approved') {
-                        if (response.success) {
-                            let filtered = response.data || response.appointments || [];
-                            if (subTab === 'approved') {
-                                filtered = filtered.filter(row => row?.token_id);
-                            }
-                            setData(filtered);
-                        }
+                   if (subTab === 'approved') {
+    let filtered = response.data || response.appointments || [];
+    // ✅ Only show approved requests WITHOUT a token
+    filtered = filtered.filter(row => !row?.token_id);
+    setData(filtered);
+} else {
+    setData(response.data || []);
+}
 
-                    }
                     setData(filtered);
                 } else {
                     console.error("API responded with error:", response.message);
@@ -145,7 +144,7 @@ export default function VisitorRequests() {
                     token_id: response.token.token_id,
                     purpose: visitor.purpose || row.purpose,
                     host: visitor.host || row.host,
-                    host_position: visitor.host_position || 'Host',
+                    host_position: response.host?.position || 'Host',
                     meeting_point: response.meeting_point || response.token?.meeting_point || 'Reception'
                 });
                 setPrintedMap(prev => ({ ...prev, [row.nic]: true }));

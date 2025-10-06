@@ -170,10 +170,16 @@ const createRfid = async (req, res) => {
             visitor_id: visitor_id,
             appointment_id
         });
+         const host = await User.findByPk(appt.user_id, { attributes: ['first_name', 'last_name', 'position'] });
         res.status(201).send({
             success: true,
             message: "RFID token created and appointment updated",
             token: newToken,
+             meeting_point,
+             host: {
+                full_name: `${host?.first_name || ''} ${host?.last_name || ''}`.trim(),
+                position: host?.position || 'Host',
+            }
         });
     } catch (err) {
         console.error(err);

@@ -26,6 +26,43 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /api/v1/checkInOut/current:
+ *   get:
+ *     summary: Get all currently checked-in visitors
+ *     tags: [CheckInOut]
+ *     responses:
+ *       200:
+ *         description: List of current visitors
+ */
+router.get('/current', getCurrentVisitors);
+
+/**
+ * @swagger
+ * /api/v1/checkInOut/upcoming:
+ *   get:
+ *     summary: Get upcoming visitors
+ *     tags: [CheckInOut]
+ *     responses:
+ *       200:
+ *         description: List of upcoming visitors
+ */
+router.get('/upcoming', getUpcomingVisitors);
+
+/**
+ * @swagger
+ * /api/v1/checkInOut/past:
+ *   get:
+ *     summary: Get past visitors
+ *     tags: [CheckInOut]
+ *     responses:
+ *       200:
+ *         description: List of past visitors
+ */
+router.get('/past', getPastVisitors);
+
+
+/**
+ * @swagger
  * /api/v1/checkInOut:
  *   get:
  *     summary: Get all check-in/out records
@@ -164,41 +201,6 @@ router.delete('/:checkin_id', deleteCheckInOut);
  */
 router.get('/host/:user_id', getVisitorsByHost);
 
-/**
- * @swagger
- * /api/v1/checkInOut/current:
- *   get:
- *     summary: Get all currently checked-in visitors
- *     tags: [CheckInOut]
- *     responses:
- *       200:
- *         description: List of current visitors
- */
-router.get('/current', getCurrentVisitors);
-
-/**
- * @swagger
- * /api/v1/checkInOut/upcoming:
- *   get:
- *     summary: Get upcoming visitors
- *     tags: [CheckInOut]
- *     responses:
- *       200:
- *         description: List of upcoming visitors
- */
-router.get('/upcoming', getUpcomingVisitors);
-
-/**
- * @swagger
- * /api/v1/checkInOut/past:
- *   get:
- *     summary: Get past visitors
- *     tags: [CheckInOut]
- *     responses:
- *       200:
- *         description: List of past visitors
- */
-router.get('/past', getPastVisitors);
 
 /**
  * @swagger

@@ -16,76 +16,88 @@ const {
 
 // Get all currently checked-in visitors (no checkout_time)
 // Used in Receptionist Dashboard -> Visitors -> Current Visitors
-const getCurrentVisitors = async (req, res) => {
-    try {
-        const data = await CheckinCheckout.findAll({
-            where: {
-                [Op.or]: [
-      { checkout_time: null },
-      { checkout_time: "" }
-    ]
-            },
-            include: [
-                {
-                    model: Visitor,
-                    attributes: ['visitor_id', 'first_name', 'last_name', 'nic']
-                },
-                {
-                    model: Appointment,  // Include Appointment directly
-                    as: 'appointment',   // Use the alias if you defined one in your associations
-                    include: [
-                        { model: Department,
-                            as: 'Department',
-                            attributes: ['department_id', 'department_name']
-                        },
-                        { model: User,
-                        as:'user',
-                            attributes: ['user_id', 'first_name', 'last_name']
-                        } // Host
-                    ]
-                },
-                {
-                    model: RFIDToken,
-                    as: 'rfid_token',
-                    include: [
-                        {
-                            model: Visitor,
-                            attributes: ['visitor_id', 'first_name']
-                        },
-                        {
-                            model: Appointment,
-                            as: 'appointment',
-                            include: [
-                                { model: Department,
-                                    as: 'Department',
-                                    attributes: ['department_id', 'department_name']
-                                },
-                                { model: User ,
-                                    as: 'user',
-                                    attributes: ['user_id', 'first_name', 'last_name']
-                                }, // Host
-                            ]
-                        }
-                    ]
-                }
-            ],
-            order: [['checkin_time', 'DESC']]
-        });
 
-        res.status(200).json({
-            success: true,
-            message: 'Currently checked-in visitors fetched successfully',
-            data,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching current visitors',
-            error: err.message
-        });
-    }
+const getCurrentVisitors = async (req, res) => {
+  try {
+    const data = await CheckinCheckout.findAll({
+      where: { checkout_time: null }, // currently checked-in
+      include: [
+        {
+          model: Visitor,
+          attributes: ['visitor_id', 'first_name', 'last_name', 'nic'],
+          required: true, // must have a visitor
+        },
+        {
+          model: Appointment,
+          as: 'appointment',
+          required: false, // LEFT JOIN
+          include: [
+            {
+              model: Department,
+              as: 'Department',
+              attributes: ['department_id', 'department_name'],
+              required: false,
+            },
+            {
+              model: User,
+              as: 'user',
+              attributes: ['user_id', 'first_name', 'last_name'],
+              required: false,
+            },
+          ],
+        },
+        {
+          model: RFIDToken,
+          as: 'rfid_token',
+          required: false, // LEFT JOIN
+          include: [
+            {
+              model: Visitor,
+              attributes: ['visitor_id', 'first_name', 'last_name'],
+              required: false,
+            },
+            {
+              model: Appointment,
+              as: 'appointment',
+              required: false,
+              include: [
+                {
+                  model: Department,
+                  as: 'Department',
+                  attributes: ['department_id', 'department_name'],
+                  required: false,
+                },
+                {
+                  model: User,
+                  as: 'user',
+                  attributes: ['user_id', 'first_name', 'last_name'],
+                  required: false,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      order: [['checkin_time', 'DESC']],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: data.length
+        ? 'Currently checked-in visitors fetched successfully'
+        : 'No visitors currently checked in',
+      data,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching current visitors',
+      error: err.message,
+    });
+  }
 };
+
 
 
 
@@ -95,52 +107,38 @@ const getUpcomingVisitors = async (req, res) => {
         const todayStart = dayjs().startOf('day').toDate();
         const todayEnd = dayjs().endOf('day').toDate();
 
-        console.log('todayStart', todayStart);
-        console.log('todayEnd', todayEnd);
-
-
         const data = await Appointment.findAll({
             where: {
                 approval_status: 'approved',
+                token_id: null, // <--- Only appointments without token_id
                 requested_date_time: {
                     [Op.between]: [todayStart, todayEnd],
                 }
             },
+             attributes: ['appointment_id' ,'purpose', 'requested_date_time', 'duration'], 
             include: [
                 { model: Visitor, attributes: ['first_name', 'last_name', 'nic'] },
-                { model: User, as: 'user',attributes: ['first_name', 'last_name'] },
-                { model: Department, as: 'Department', attributes: ['department_name'] },
-                {
-                    model: CheckinCheckout,
-                    as: 'checkinCheckout',
-                    required: false,  // LEFT JOIN so we include appointments with no checkin record
-                    where: {
-                        checkin_time: null,
-                        checkout_time: null,
-                    },
-                    attributes: []
-                }
+                { model: User, as: 'user', attributes: ['first_name', 'last_name'] },
+                { model: Department, as: 'Department', attributes: ['department_name'] }
             ],
-            having: literal('COUNT(`checkinCheckout`.`checkin_id`) > 0'), // Has at least one matching record with null times
-            group: ['Appointment.appointment_id'],
             order: [['requested_date_time', 'ASC']],
         });
-        console.log('record', data.map(d => d.requested_date_time));
+
         if (!data.length) {
             return res.status(404).json({ success: false, message: 'No upcoming visitors found for today' });
         }
-        console.log("Fetched appointments:", JSON.stringify(data, null, 2));
 
         res.status(200).json({
             success: true,
             message: 'Upcoming visitors fetched successfully',
-            data,
+            data
         });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Error fetching upcoming visitors', err });
     }
 };
+
 
 // PAST VISITORS
 // USED IN VISITOR'S PAST VISITS TAB

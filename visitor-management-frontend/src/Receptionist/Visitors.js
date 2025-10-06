@@ -15,46 +15,44 @@ export default function Visitors() {
     const [selectedVisitor, setSelectedVisitor] = useState(null);
 
     // Fetch visitor data when subTab changes
-    useEffect(() => {
-        const fetchVisitors = async () => {
-            let endpoint = '';
-            if (subTab === 'current') endpoint = 'current';
-            else if (subTab === 'upcoming') endpoint = 'upcoming';
-            else if (subTab === 'past') endpoint = 'past';
+   useEffect(() => {
+    (async () => {
+        try {
+            const endpoint = subTab;
+            const res = await fetch(`http://localhost:8080/api/v1/checkInOut/${endpoint}`);
+            const result = await res.json();
 
-            try {
-                const res = await fetch(`http://localhost:8080/api/v1/checkInOut/${endpoint}`);
-                const result = await res.json();
+            console.log("Subtab:", subTab);
+            console.log("Raw data from API:", result.data);
 
-                if (result.success) {
-                    const formatted = result.data.map((v, index) => ({
-                        id: v?.visitor_id || v?.Visitor?.nic || `N/A-${index + 1}`,
-                        appointmentId: v?.appointment?.id || v?.rfid_token?.appointment?.id || null,
-                        fullName: v?.full_name || `${v?.Visitor?.first_name || ''} ${v?.Visitor?.last_name || ''}`.trim(),
-                        purpose: v?.appointment?.purpose || '-',
-                        host: `${v?.appointment?.User?.first_name || ''} ${v?.appointment?.User?.last_name || ''}`.trim() || '-',
-                        checkInTime: v?.checkin_time ? new Date(v.checkin_time).toLocaleString() : '-',
-                        checkOutTime: v?.checkout_time ? new Date(v.checkout_time).toLocaleString() : '-',
-                        requestedTime: v?.requested_date_time ? new Date(v.requested_date_time).toLocaleString() : '-',
-                        duration: v?.duration || '-',
-                        location: v?.location || 'Reception',
-                        status: v?.checkout_time ? 'Checked Out' : 'Checked In',
-                        blacklist: v?.blacklist ? 'Yes' : 'No',
-                        comments: v?.appointment?.comment || '-',
-                        date: v?.date ? new Date(v.date).toLocaleDateString() : '-',
-                    }));
-                    setVisitors(formatted);
-                } else {
-                    setVisitors([]);
-                }
-            } catch (error) {
-                console.error("Fetch error:", error);
+            if (result.success) {
+                const formatted = result.data.map((v, index) => ({
+                    id: v?.Visitor?.visitor_id || v?.visitor_id || v?.Visitor?.nic || `N/A-${index + 1}`,
+                    appointmentId: v?.appointment?.id || v?.rfid_token?.appointment?.id || null,
+                    fullName: `${v?.Visitor?.first_name || ''} ${v?.Visitor?.last_name || ''}`.trim() || v?.full_name || `Visitor-${index + 1}`,
+                    purpose: v?.appointment?.purpose || v?.purpose || '-',
+                    host: `${v?.appointment?.user?.first_name || ''} ${v?.appointment?.user?.last_name || v?.user?.first_name || ''} ${v?.user?.last_name || ''}`.trim() || '-',
+                    checkInTime: v?.checkin_time ? new Date(v.checkin_time).toLocaleString() : '-',
+                    checkOutTime: v?.checkout_time ? new Date(v.checkout_time).toLocaleString() : '-',
+                    requestedTime: v?.requested_date_time ? new Date(v.requested_date_time).toLocaleString() : '-',
+                    duration: v?.duration || '-',
+                    location: v?.location || 'Reception',
+                    status: v?.checkout_time ? 'Checked Out' : 'Checked In',
+                    blacklist: v?.blacklist ? 'Yes' : 'No',
+                    comments: v?.appointment?.comment || '-',
+                    date: v?.date ? new Date(v.date).toLocaleDateString() : '-',
+                }));
+
+                setVisitors(formatted);
+            } else {
                 setVisitors([]);
             }
-        };
-
-        fetchVisitors();
-    }, [subTab]);
+        } catch (err) {
+            console.error("Fetch visitors error:", err);
+            setVisitors([]);
+        }
+    })();
+}, [subTab]);
 
     const filteredVisitors = visitors.filter(v =>
         v.fullName.toLowerCase().includes(search.toLowerCase()) ||
