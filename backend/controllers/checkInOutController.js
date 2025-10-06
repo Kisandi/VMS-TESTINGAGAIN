@@ -12,6 +12,7 @@ const {
     UserType,
     Location
 } = require('../models');
+const { v4: uuidv4 } = require('uuid');
 
 
 // Get all currently checked-in visitors (no checkout_time)
@@ -225,43 +226,75 @@ const getPastVisitors = async (req, res) => {
 
 const checkInByRFID = async (req, res) => {
     try {
+        // 1️⃣ Find the RFID token
         const token = await RFIDToken.findOne({ where: { token_id: req.body.rfid } });
         if (!token) return res.status(404).json({ success: false, message: 'RFID not recognized' });
 
+        // 2️⃣ Get appointment and visitor
         const appointment = await Appointment.findByPk(token.appointment_id);
         const visitor = await Visitor.findByPk(token.visitor_id);
+
         if (!appointment || appointment.approval_status !== 'approved') {
             return res.status(403).json({ success: false, message: 'No valid appointment' });
         }
 
-        // Create checkin record
-        await CheckinCheckout.create({
+        // 3️⃣ Create check-in record and save to variable
+        const checkin = await CheckinCheckout.create({
             visitor_id: visitor.id,
             appointment_id: appointment.id,
             checkin_time: new Date(),
             checkout_time: null
         });
 
-        // Notify host
+        // 4️⃣ Notify host
         const notificationHost = await Notification.create({
-            message: `Your visitor ${visitor.first_name} checked in.`,
-            created_at: new Date(),
+            notification_id: uuidv4(),
+            notification_type: 'checkin',
+            content: `✅ Your visitor ${visitor.first_name} checked in.`,
+            timestamp: new Date(),
+            read: false,
+            visitor_id: visitor.id,
+            checkin_id: checkin.checkin_id,
+            user_id: appointment.host_id
         });
-        await UserNotification.create({ user_id: appointment.host_id, notification_id: notificationHost.id, read: false });
 
-        // Notify admin and receptionist
-        const staff = await User.findAll({
-            include: [{ model: UserType, where: { name: ['admin', 'receptionist'] } }],
+        await UserNotification.create({
+            user_id: appointment.host_id,
+            notification_id: notificationHost.notification_id,
+            read: false
         });
+
+        // 5️⃣ Notify admin and receptionist
+      const staff = await User.findAll({
+    include: [{
+        model: UserType,
+        as: 'roles',
+        where: { user_type: ['Admin', 'Receptionist'] } // column name from user_type table
+    }]
+});
+
+
         for (const user of staff) {
             const notify = await Notification.create({
-                message: `Visitor ${visitor.first_name} checked in.`,
-                created_at: new Date(),
+                notification_id: uuidv4(),
+                notification_type: 'checkin',
+                content: `✅ Visitor ${visitor.first_name} checked in.`,
+                timestamp: new Date(),
+                read: false,
+                visitor_id: visitor.id,
+                checkin_id: checkin.checkin_id,
+                user_id: user.id
             });
-            await UserNotification.create({ user_id: user.id, notification_id: notify.id, read: false });
+
+            await UserNotification.create({
+                user_id: user.id,
+                notification_id: notify.notification_id,
+                read: false
+            });
         }
 
         res.status(200).json({ success: true, message: 'Check-in successful' });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Error during check-in', error: err.message });

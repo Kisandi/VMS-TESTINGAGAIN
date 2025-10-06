@@ -19,7 +19,7 @@ const UserNotification = sequelize.define('UserNotification', {
         allowNull: true,
     },
     notification_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
     },
     checkin_id: {

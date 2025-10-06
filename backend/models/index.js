@@ -133,8 +133,24 @@ Visitor.hasMany(Location, {
     foreignKey: 'visitor_id'
 });
 
-User.belongsToMany(UserType, { through: UserRoles, foreignKey: 'user_id', otherKey: 'user_type_id', as: 'userTypes' });
-UserType.belongsToMany(User, { through: UserRoles, foreignKey: 'user_type_id', otherKey: 'user_id', as: 'users' });
+// User.js
+User.belongsToMany(UserType, {
+  through: 'user_roles',
+  foreignKey: 'user_id',
+  otherKey: 'user_type_id',
+  as: 'roles',
+  timestamps: false
+});
+
+// UserType.js
+UserType.belongsToMany(User, {
+  through: 'user_roles',
+  foreignKey: 'user_type_id',
+  otherKey: 'user_id',
+  as: 'users',
+   timestamps: false 
+});
+
 User.hasMany(UserRoles, { foreignKey: 'user_id', as: 'userRoles' });
 UserRoles.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 

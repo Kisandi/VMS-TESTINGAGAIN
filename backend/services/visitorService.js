@@ -7,7 +7,7 @@ async function checkInVisitor(appointmentId) {
     if (appointment.approval_status !== 'approved') throw new Error('Appointment not approved');
 
     // Find first available token
-    const token = await RFIDToken.findOne({ where: { status: 'Available' } });
+    const token = await RFIDToken.findOne({ where: { status: 'active' } });
     if (!token) throw new Error('No available RFID tokens');
 
     // Update token to assigned
